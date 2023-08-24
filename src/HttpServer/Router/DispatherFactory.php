@@ -1,17 +1,17 @@
 <?php
 
-namespace Rebuild\HttpServer\Router;
+declare(strict_types=1);
 
+namespace Rebuild\HttpServer\Router;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use Hyperf\HttpServer\Router\Router;
 use Rebuild\HttpServer\MiddlewareManager;
+
 use function FastRoute\simpleDispatcher;
 
 class DispatherFactory
 {
-
     /**
      * @var string[]
      */
@@ -60,5 +60,4 @@ class DispatherFactory
             }
         }
     }
-
 }

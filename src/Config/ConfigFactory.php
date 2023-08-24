@@ -1,13 +1,13 @@
 <?php
 
-namespace Rebuild\Config;
+declare(strict_types=1);
 
+namespace Rebuild\Config;
 
 use Symfony\Component\Finder\Finder;
 
 class ConfigFactory
 {
-
     public function __invoke()
     {
         $basePath = BASE_PATH . '/config';
@@ -38,5 +38,4 @@ class ConfigFactory
         }
         return $config;
     }
-
 }

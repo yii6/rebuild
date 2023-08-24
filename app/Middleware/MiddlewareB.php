@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Middleware;
+declare(strict_types=1);
 
+namespace App\Middleware;
 
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
@@ -11,7 +12,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class MiddlewareB implements MiddlewareInterface
 {
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         var_dump(__CLASS__);

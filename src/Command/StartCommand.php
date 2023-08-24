@@ -1,7 +1,8 @@
 <?php
 
-namespace Rebuild\Command;
+declare(strict_types=1);
 
+namespace Rebuild\Command;
 
 use Rebuild\Server\ServerFactory;
 use Symfony\Component\Console\Command\Command;
@@ -10,15 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class StartCommand extends Command
 {
-
     /**
      * @var \Rebuild\Config\Config
      */
     protected $config;
 
-    /**
-     * @param \Rebuild\Config\Config $config
-     */
     public function __construct(\Rebuild\Config\Config $config)
     {
         parent::__construct();
@@ -39,6 +36,4 @@ class StartCommand extends Command
         $serverFactory->getServer()->start();
         return 1;
     }
-
-
 }

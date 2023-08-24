@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Rebuild\Contract;
 
-
 interface ConfigInterface
 {
-
     /**
      * Finds an entry of the container by its identifier and returns it.
      *
@@ -32,5 +31,4 @@ interface ConfigInterface
      * @param mixed $value the value that save to container
      */
     public function set(string $key, $value);
-
 }

@@ -1,24 +1,25 @@
 <?php
 
-namespace Rebuild\HttpServer;
+declare(strict_types=1);
 
+namespace Rebuild\HttpServer;
 
 use FastRoute\Dispatcher;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\Utils\Codec\Json;
+use Hyperf\Utils\Context;
 use Hyperf\Utils\Contracts\Arrayable;
 use Hyperf\Utils\Contracts\Jsonable;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Rebuild\HttpServer\Router\DispatherFactory;
-use Hyperf\Utils\Context;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Rebuild\HttpServer\Contract\CoreMiddlewareInterface;
 use Rebuild\HttpServer\Router\Dispatched;
+use Rebuild\HttpServer\Router\DispatherFactory;
 
 class CoreMiddleware implements CoreMiddlewareInterface
 {
-
     /**
      * @var Dispatcher
      */
@@ -37,15 +38,14 @@ class CoreMiddleware implements CoreMiddlewareInterface
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
         $dispatched = new Dispatched($routeInfo);
 
-        $request = Context::set(ServerRequestInterface::class, $request->withAttribute(Dispatched::class, $dispatched));
-        return $request;
+        return Context::set(ServerRequestInterface::class, $request->withAttribute(Dispatched::class, $dispatched));
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $dispatched = $request->getAttribute(Dispatched::class);
         if (! $dispatched instanceof Dispatched) {
-            throw new \InvalidArgumentException('Route not found');
+            throw new InvalidArgumentException('Route not found');
         }
         switch ($dispatched->status) {
             case Dispatcher::NOT_FOUND:
@@ -66,13 +66,13 @@ class CoreMiddleware implements CoreMiddlewareInterface
 
     protected function handleNotFound(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var ResponseInterface $response */
+        /* @var ResponseInterface $response */
         return $response->withStatus(404)->withBody(new SwooleStream('Not found'));
     }
 
     protected function handleMethodNotAllow(ServerRequestInterface $request)
     {
-        /** @var ResponseInterface $response */
+        /* @var ResponseInterface $response */
         return $response->withStatus(405)->withBody(new SwooleStream('Method not allow'));
     }
 
@@ -80,10 +80,10 @@ class CoreMiddleware implements CoreMiddlewareInterface
     {
         [$controller, $action] = $dispatched->handler;
         if (! class_exists($controller)) {
-            throw new \InvalidArgumentException('Controller not exist');
+            throw new InvalidArgumentException('Controller not exist');
         }
         if (! method_exists($controller, $action)) {
-            throw new \InvalidArgumentException('Action of Controller not exist');
+            throw new InvalidArgumentException('Action of Controller not exist');
         }
         $parameters = [];
         $controllerInstance = new $controller();
@@ -96,11 +96,13 @@ class CoreMiddleware implements CoreMiddlewareInterface
             return $this->response()
                 ->withAddedHeader('Content-Type', 'text/plain')
                 ->withBody(new SwooleStream((string) $response));
-        } elseif (is_array($response) || $response instanceof Arrayable) {
+        }
+        if (is_array($response) || $response instanceof Arrayable) {
             return $this->response()
                 ->withAddedHeader('Content-Type', 'application/json')
                 ->withBody(new SwooleStream(Json::encode($response)));
-        } elseif ($response instanceof Jsonable) {
+        }
+        if ($response instanceof Jsonable) {
             return $this->response()
                 ->withAddedHeader('Content-Type', 'application/json')
                 ->withBody(new SwooleStream((string) $response));

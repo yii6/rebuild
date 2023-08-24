@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Rebuild\HttpServer;
 
 use FastRoute\Dispatcher;
-use FastRoute\RouteCollector;
+use Hyperf\HttpMessage\Server\Request as Psr7Request;
+use Hyperf\HttpMessage\Server\Response as Psr7Response;
 use Hyperf\Utils\Context;
-use Hyperf\Utils\Str;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rebuild\Config\ConfigFactory;
@@ -14,14 +16,9 @@ use Rebuild\HttpServer\Router\Dispatched;
 use Rebuild\HttpServer\Router\DispatherFactory;
 use Swoole\Http\Request as SwooleRequest;
 use Swoole\Http\Response as SwooleResponse;
-use Hyperf\HttpMessage\Server\Response as Psr7Response;
-use Hyperf\HttpMessage\Server\Request as Psr7Request;
-use function FastRoute\simpleDispatcher;
-
 
 class Server
 {
-
     /**
      * @var Dispatcher
      */
@@ -31,6 +28,7 @@ class Server
      * @var \Rebuild\HttpServer\Contract\CoreMiddlewareInterface
      */
     protected $coreMiddleware;
+
     protected $globalMiddlewares;
 
     /**
@@ -95,5 +93,4 @@ class Server
         Context::set(ServerRequestInterface::class, $psr7Request = Psr7Request::loadFromSwooleRequest($request));
         return [$psr7Request, $psr7Response];
     }
-
 }

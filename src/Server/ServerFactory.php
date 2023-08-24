@@ -1,11 +1,11 @@
 <?php
 
-namespace Rebuild\Server;
+declare(strict_types=1);
 
+namespace Rebuild\Server;
 
 class ServerFactory
 {
-
     protected $serverConfig = [];
 
     /**
@@ -26,6 +26,4 @@ class ServerFactory
         }
         return $this->server;
     }
-
-
 }

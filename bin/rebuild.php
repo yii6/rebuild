@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Rebuild\Command\StartCommand;
 use Rebuild\Config\ConfigFactory;
 use Symfony\Component\Console\Application;
@@ -16,7 +18,7 @@ foreach ($commands as $command) {
     if ($command === StartCommand::class) {
         $application->add(new StartCommand($config));
     } else {
-        $application->add(new $command);
+        $application->add(new $command());
     }
 }
 $application->run();

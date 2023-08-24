@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+declare(strict_types=1);
 
+namespace App\Controller;
 
 class HelloController
 {
-
     /**
      * @path /hello/index
      * @return string
@@ -23,5 +23,4 @@ class HelloController
     {
         return 'Hyperf Hello';
     }
-
 }

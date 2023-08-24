@@ -1,11 +1,11 @@
 <?php
 
-namespace Rebuild\HttpServer;
+declare(strict_types=1);
 
+namespace Rebuild\HttpServer;
 
 class MiddlewareManager
 {
-
     protected static $middlewares = [];
 
     public static function addMiddlewares(string $path, string $method, array $middlewares)
@@ -20,5 +20,4 @@ class MiddlewareManager
     {
         return static::$middlewares[$path][$method] ?? [];
     }
-
 }

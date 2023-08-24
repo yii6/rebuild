@@ -1,7 +1,6 @@
 <?php
 
-
-use Rebuild\Server\Server;
+declare(strict_types=1);
 
 return [
     'mode' => SWOOLE_PROCESS,

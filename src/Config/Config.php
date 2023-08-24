@@ -1,21 +1,18 @@
 <?php
 
-namespace Rebuild\Config;
+declare(strict_types=1);
 
+namespace Rebuild\Config;
 
 use Rebuild\Contract\ConfigInterface;
 
 class Config implements ConfigInterface
 {
-
     /**
      * @var array
      */
     protected $configs = [];
 
-    /**
-     * @param array $configs
-     */
     public function __construct(array $configs)
     {
         $this->configs = $configs;

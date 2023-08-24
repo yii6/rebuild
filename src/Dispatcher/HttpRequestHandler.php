@@ -1,14 +1,14 @@
 <?php
 
-namespace Rebuild\Dispatcher;
+declare(strict_types=1);
 
+namespace Rebuild\Dispatcher;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class HttpRequestHandler extends AbstractRequestHandler
 {
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->handleRequest($request);

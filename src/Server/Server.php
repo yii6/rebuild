@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Rebuild\Server;
 
-
 use Rebuild\HttpServer\Router\DispatherFactory;
-use Swoole\Coroutine\Server as SwooleCoServer;
-use Swoole\Server as SwooleServer;
 use Swoole\Http\Server as SwooelHttpServer;
+use Swoole\Server as SwooleServer;
 
 class Server implements ServerInterface
 {
-
     /**
      * @var SwooleServer
      */

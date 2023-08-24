@@ -1,14 +1,14 @@
 <?php
 
-namespace Rebuild\Dispatcher;
+declare(strict_types=1);
 
+namespace Rebuild\Dispatcher;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 abstract class AbstractRequestHandler implements RequestHandlerInterface
 {
-
     /**
      * @var \Psr\Http\Server\MiddlewareInterface
      */
@@ -18,9 +18,6 @@ abstract class AbstractRequestHandler implements RequestHandlerInterface
 
     protected $offset = 0;
 
-    /**
-     * @param array $middlewares
-     */
     public function __construct(array $middlewares, MiddlewareInterface $coreHandler)
     {
         $this->middlewares = $middlewares;
