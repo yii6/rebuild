@@ -4,7 +4,7 @@ use Rebuild\Command\StartCommand;
 use Rebuild\Config\ConfigFactory;
 use Symfony\Component\Console\Application;
 
-require 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 ! defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__, 1));
 
