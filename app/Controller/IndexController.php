@@ -8,6 +8,6 @@ class IndexController
 {
     public function index()
     {
-        return 'Hello Hyperf';
+        return (new HelloController())->index();
     }
 }

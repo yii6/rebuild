@@ -1,12 +1,6 @@
 {
     "name": "huangzh/hyperf-rebuild",
     "type": "project",
-    "authors": [
-        {
-            "name": "huangzhhui",
-            "email": "huangzhwork@gmail.com"
-        }
-    ],
     "require": {
         "symfony/console": "^5.1",
         "symfony/finder": "^5.1",
