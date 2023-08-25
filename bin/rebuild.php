@@ -7,16 +7,11 @@ use Rebuild\Config\ConfigFactory;
 use Symfony\Component\Console\Application;
 
 require_once 'vendor/autoload.php';
-// php bin/rebuild.php
-$index = new \App\Controller\IndexController();
-echo $index->index();
-exit;
+
 !defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__, 1));
 
-
-
-
 $application = new Application();
+
 $config = new ConfigFactory();
 $config = $config();
 $commands = $config->get('commands');

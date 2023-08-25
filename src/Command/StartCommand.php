@@ -29,11 +29,22 @@ class StartCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $config = $this->config;
-        $configs = $config->get('server');
-        $serverFactory = new ServerFactory();
-        $serverFactory->configure($configs);
-        $serverFactory->getServer()->start();
+        $http = new \Swoole\Http\Server('0.0.0.0', 9501);
+
+        $http->on('Request', function ($request, $response) {
+            $response->header('Content-Type', 'text/html; charset=utf-8');
+            $response->end('<h1>Hello Swoole. #' . random_int(1000, 9999) . '</h1>');
+        });
+
+        $http->start();
+
+
+
+//        $config = $this->config;
+//        $configs = $config->get('server');
+//        $serverFactory = new ServerFactory();
+//        $serverFactory->configure($configs);
+//        $serverFactory->getServer()->start();
         return 1;
     }
 }
