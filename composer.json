@@ -7,7 +7,8 @@
         "hyperf/http-message": "^2.0",
         "hyperf/utils": "^2.0",
         "nikic/fast-route": "^1.3",
-        "psr/http-server-middleware": "^1.0"
+        "psr/http-server-middleware": "^1.0",
+        "ext-yaml": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
