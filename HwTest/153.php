@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 function play(array $a, array $b): array
 {
     if ($a['power'] > $b['power']) {
@@ -47,7 +49,7 @@ function finishTop3(array $cur): void
     }
 }
 
-$in = @fopen("in.txt", 'rb');
+$in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
@@ -56,10 +58,10 @@ $buf = trim(fgets($in));
 $parts = preg_split('/\s+/', $buf);
 
 $cur = [];
-for ($i = 0, $N = count($parts); $i < $N; $i++) {
+for ($i = 0, $N = count($parts); $i < $N; ++$i) {
     $cur[] = [
         'id' => $i,
-        'power' => (int)$parts[$i],
+        'power' => (int) $parts[$i],
     ];
 }
 

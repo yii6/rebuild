@@ -1,14 +1,10 @@
 <?php
-declare(strict_types=1);
 
-/**
- * 将输入的 N_i 转为 [块尺寸 => 数量]，尺寸为 2^i，过滤掉数量为 0 的项。
- * 例如：N0=3, N1=2, N3=1 => [1=>3, 2=>2, 8=>1]
- */
+declare(strict_types=1);
 function buildFreeNis(array $ni, int $n): array
 {
     $levels = [];
-    for ($i = 0; $i <= $n; $i++) {
+    for ($i = 0; $i <= $n; ++$i) {
         $cnt = $ni[$i] ?? 0;
         if ($cnt > 0) {
             $levels[1 << $i] = $cnt;
@@ -18,7 +14,7 @@ function buildFreeNis(array $ni, int $n): array
 }
 
 /**
- * 生成库存尺寸键的升序/降序数组（只做一次）
+ * 生成库存尺寸键的升序/降序数组（只做一次）.
  * @return array{0: int[], 1: int[]} [$sizesAsc, $sizesDesc]
  */
 function buildOrders(array $stock): array
@@ -33,7 +29,9 @@ function buildOrders(array $stock): array
 function hasStock(array $stock): bool
 {
     foreach ($stock as $q) {
-        if ($q > 0) return true;
+        if ($q > 0) {
+            return true;
+        }
     }
     return false;
 }
@@ -42,7 +40,9 @@ function hasStock(array $stock): bool
 function maxSize(array $stock, array $sizesDesc): ?int
 {
     foreach ($sizesDesc as $s) {
-        if (($stock[$s] ?? 0) > 0) return $s;
+        if (($stock[$s] ?? 0) > 0) {
+            return $s;
+        }
     }
     return null;
 }
@@ -51,13 +51,15 @@ function maxSize(array $stock, array $sizesDesc): ?int
 function minCover(array $stock, array $sizesAsc, int $need): ?int
 {
     foreach ($sizesAsc as $s) {
-        if (($stock[$s] ?? 0) > 0 && $s > $need) return $s;
+        if (($stock[$s] ?? 0) > 0 && $s > $need) {
+            return $s;
+        }
     }
     return null;
 }
 
 /**
- * 判定是否可为 k 个用户各提供至少 d 带宽（你的“最大超配”策略）
+ * 判定是否可为 k 个用户各提供至少 d 带宽（你的“最大超配”策略）.
  *
  * 对每个用户：
  *   A) 取当前最大尺寸 s_max 做整份匹配：t = min(floor(need/s_max), 库存)
@@ -67,51 +69,60 @@ function minCover(array $stock, array $sizesAsc, int $need): ?int
  */
 function canServeUsers(int $k, array $freeNis, int $d): bool
 {
-    if (empty($freeNis)) return false;
+    if (empty($freeNis)) {
+        return false;
+    }
     if ($d <= 0) {
         $total = 0;
-        foreach ($freeNis as $q) $total += $q;
+        foreach ($freeNis as $q) {
+            $total += $q;
+        }
         return $total >= $k;
     }
 
     // 一次性构建升/降序尺寸列表
     [$sizesAsc, $sizesDesc] = buildOrders($freeNis);
 
-    for ($user = 0; $user < $k; $user++) {
+    for ($user = 0; $user < $k; ++$user) {
         $need = $d;
 
         while ($need > 0) {
-            if (!hasStock($freeNis)) {
+            if (! hasStock($freeNis)) {
                 return false;
             }
             // A) 用当前最大尺寸整份匹配
             $smax = maxSize($freeNis, $sizesDesc);
-            if ($smax === null) return false; // 无货
+            if ($smax === null) {
+                return false;
+            } // 无货
             if ($need >= $smax) {
                 $q = $freeNis[$smax];
                 $t = intdiv($need, $smax);
-                if ($t > $q) $t = $q;
+                if ($t > $q) {
+                    $t = $q;
+                }
                 if ($t > 0) {
                     $freeNis[$smax] -= $t;
                     $need -= $t * $smax;
-                    if ($need <= 0) break; // 该用户满足
+                    if ($need <= 0) {
+                        break;
+                    } // 该用户满足
                 }
             }
-
-            if ($need <= 0) break;
 
             // B) 最小覆盖：找最小 s>need
             $cover = minCover($freeNis, $sizesAsc, $need);
             if ($cover !== null) {
-                $freeNis[$cover]--;
-                $need = 0;           // 覆盖完成
+                --$freeNis[$cover];
                 break;
             }
 
             // C) 没有 s>need：按你的策略，再用最大尺寸压一口，再回到 B)
             $smax = maxSize($freeNis, $sizesDesc);
-            if ($smax === null || $freeNis[$smax] <= 0) return false;
-            $freeNis[$smax]--;
+            if ($smax === null || $freeNis[$smax] <= 0) {
+                return false;
+            }
+            --$freeNis[$smax];
             $need -= $smax;         // 继续循环，下一轮再尝试“最小覆盖”
         }
     }
@@ -120,15 +131,15 @@ function canServeUsers(int $k, array $freeNis, int $d): bool
 }
 
 // ------------------ 输入（文件流优先，失败回落 STDIN） ------------------
-$in = @fopen("in.txt", 'rb');
+$in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
 
-$n = (int)trim(fgets($in));
+$n = (int) trim(fgets($in));
 $line = trim(fgets($in));
 $Ni = array_map('intval', preg_split('/\s+/', $line));
-$D = (int)trim(fgets($in));
+$D = (int) trim(fgets($in));
 
 $freeNis = buildFreeNis($Ni, $n);
 

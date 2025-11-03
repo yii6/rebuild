@@ -38,13 +38,11 @@ class StartCommand extends Command
 
         $http->start();
 
-
-
-//        $config = $this->config;
-//        $configs = $config->get('server');
-//        $serverFactory = new ServerFactory();
-//        $serverFactory->configure($configs);
-//        $serverFactory->getServer()->start();
+        //        $config = $this->config;
+        //        $configs = $config->get('server');
+        //        $serverFactory = new ServerFactory();
+        //        $serverFactory->configure($configs);
+        //        $serverFactory->getServer()->start();
         return 1;
     }
 }

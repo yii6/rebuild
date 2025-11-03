@@ -1,9 +1,11 @@
 <?php
-$in = @fopen("in.txt", 'rb');
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
-$N = (int)trim(fgets($in));
+$N = (int) trim(fgets($in));
 $dp = array_fill(0, $N + 1, 0);
 // 初始化边界
 $dp[0] = 1;
@@ -17,7 +19,7 @@ if ($N >= 3) {
     $dp[3] = 2;
 }
 
-for ($i = 4; $i <= $N; $i++) {
+for ($i = 4; $i <= $N; ++$i) {
     $dp[$i] = $dp[$i - 1] + $dp[$i - 3];
 }
 

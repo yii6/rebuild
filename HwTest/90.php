@@ -1,5 +1,7 @@
 <?php
-$in = @fopen("in.txt", 'rb');
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
@@ -14,7 +16,7 @@ foreach ($parts as $token) {
     if ($lastChar === '*') {
         $token = substr($token, 0, -1);
     }
-    $num = (int)$token;           // 比如 "20" -> 20
+    $num = (int) $token;           // 比如 "20" -> 20
     $result .= chr($base + $num); // 1->a, 2->b, ...
 }
 echo $result, PHP_EOL;

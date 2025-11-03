@@ -1,11 +1,13 @@
 <?php
 
-$in = fopen("in.txt", "r");
+declare(strict_types=1);
+
+$in = fopen('in.txt', 'r');
 
 // 1. 读取 n 和 m
 $n = 0;
 $m = 0;
-fscanf($in, "%d %d", $n, $m);
+fscanf($in, '%d %d', $n, $m);
 
 // 2. 读取科目名称行
 $subjectsLine = trim(fgets($in));
@@ -13,21 +15,21 @@ $subjects = explode(' ', $subjectsLine);
 
 // 建一个 map: 科目名 => 下标
 $subjectIndex = [];
-for ($i = 0; $i < $m; $i++) {
+for ($i = 0; $i < $m; ++$i) {
     $subjectIndex[$subjects[$i]] = $i;
 }
 
 // 3. 读取 n 个学生信息
 $students = [];
-for ($i = 0; $i < $n; $i++) {
+for ($i = 0; $i < $n; ++$i) {
     $line = trim(fgets($in));
     $parts = explode(' ', $line);
 
     $name = $parts[0];
     $scores = [];
     $total = 0;
-    for ($j = 0; $j < $m; $j++) {
-        $score = (int)$parts[$j + 1];
+    for ($j = 0; $j < $m; ++$j) {
+        $score = (int) $parts[$j + 1];
         $scores[$j] = $score;
         $total += $score;
     }
@@ -66,7 +68,7 @@ usort($students, function ($a, $b) use ($useSubjectIndex) {
 
     // 第一关键字：分数，降序（高分在前）
     if ($scoreA !== $scoreB) {
-        return ($scoreB - $scoreA); // 大的在前
+        return $scoreB - $scoreA; // 大的在前
     }
 
     // 第二关键字：姓名，字典序升序（小的在前）

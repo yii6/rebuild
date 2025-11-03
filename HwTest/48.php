@@ -1,19 +1,21 @@
 <?php
 
-$in = fopen("in.txt", "r");
-$out = fopen("out.txt", "w");
+declare(strict_types=1);
+
+$in = fopen('in.txt', 'r');
+$out = fopen('out.txt', 'w');
 $n = 0;
-fscanf($in, "%d", $n);
+fscanf($in, '%d', $n);
 
 $grid = [];
 $momX = $momY = $babyX = $babyY = -1;
 
-for ($i = 0; $i < $n; $i++) {
+for ($i = 0; $i < $n; ++$i) {
     $line = trim(fgets($in));
     $vals = explode(' ', $line);
     $row = [];
-    for ($j = 0; $j < $n; $j++) {
-        $v = (int)$vals[$j];
+    for ($j = 0; $j < $n; ++$j) {
+        $v = (int) $vals[$j];
         $row[$j] = $v;
         if ($v === -3) {
             $momX = $i;
@@ -45,7 +47,7 @@ $dist[$momX][$momY] = 0;
 $candy[$momX][$momY] = 0;
 $qx[$tail] = $momX;
 $qy[$tail] = $momY;
-$tail++;
+++$tail;
 
 // 四个方向
 $dirs = [
@@ -59,7 +61,7 @@ $dirs = [
 while ($head < $tail) {
     $x = $qx[$head];
     $y = $qy[$head];
-    $head++;
+    ++$head;
 
     $currDist = $dist[$x][$y];
     $currCandy = $candy[$x][$y];
@@ -99,7 +101,7 @@ while ($head < $tail) {
 
             $qx[$tail] = $nx;
             $qy[$tail] = $ny;
-            $tail++;
+            ++$tail;
         } // 或者步数相同，但是糖果更多
         elseif ($nd == $dist[$nx][$ny] && $nc > $candy[$nx][$ny]) {
             $candy[$nx][$ny] = $nc;
@@ -107,14 +109,14 @@ while ($head < $tail) {
             // 邻居有可能因为这条更高收益路径继续提升后续节点的收益
             $qx[$tail] = $nx;
             $qy[$tail] = $ny;
-            $tail++;
+            ++$tail;
         }
     }
 }
 
 if ($dist[$babyX][$babyY] === $INF) {
     // 到不了宝宝
-    echo "-1";
+    echo '-1';
 } else {
     // 最短路径中能拿到的最多糖果
     echo $candy[$babyX][$babyY];

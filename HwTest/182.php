@@ -1,5 +1,7 @@
 <?php
-$in = @fopen("in.txt", 'rb');
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
@@ -16,8 +18,8 @@ $len = strlen($clean);
 
 // 3. 预统计剩余频次 remaining[26]
 $remaining = array_fill(0, 26, 0);
-for ($i = 0; $i < $len; $i++) {
-    $remaining[ord($clean[$i]) - 97]++;
+for ($i = 0; $i < $len; ++$i) {
+    ++$remaining[ord($clean[$i]) - 97];
 }
 
 $tokens = [];
@@ -28,7 +30,7 @@ for ($i = 0; $i < $len;) {
     // 找最大连续段 [i .. j-1]
     $j = $i + 1;
     while ($j < $len && $clean[$j] === $ch) {
-        $j++;
+        ++$j;
     }
     $runLen = $j - $i;
 
@@ -41,11 +43,13 @@ for ($i = 0; $i < $len;) {
     } else {
         // 非连续：输出 ch + (后续次数) = remaining[idx] - 1
         $later = $remaining[$idx] - 1;
-        if ($later < 0) $later = 0;
+        if ($later < 0) {
+            $later = 0;
+        }
         $tokens[] = ['ch' => $ch, 'num' => $later];
         // 扣减当前这一个
-        $remaining[$idx]--;
-        $i++;
+        --$remaining[$idx];
+        ++$i;
     }
 }
 

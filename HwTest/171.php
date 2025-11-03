@@ -1,5 +1,7 @@
 <?php
-$in = @fopen("in.txt", 'rb');
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
@@ -12,10 +14,10 @@ preg_match_all('/\d+/', $line, $matches);
 $nums = $matches[0];
 
 $cnt = count($nums);
-$K = (int)$nums[$cnt - 1];
+$K = (int) $nums[$cnt - 1];
 $X = [];
-for ($i = 0; $i < $cnt - 1; $i++) {
-    $X[] = (int)$nums[$i];
+for ($i = 0; $i < $cnt - 1; ++$i) {
+    $X[] = (int) $nums[$i];
 }
 
 $n = count($X);
@@ -28,7 +30,7 @@ $median = $sorted[intdiv($n, 2)]; // n/2 位置的元素，0-based
 // 前缀和 prefix，使得 prefix[s] = X[0] + ... + X[s-1]
 // prefix 长度 = n+1
 $prefix = array_fill(0, $n + 1, 0);
-for ($i = 1; $i <= $n; $i++) {
+for ($i = 1; $i <= $n; ++$i) {
     $prefix[$i] = $prefix[$i - 1] + $X[$i - 1];
 }
 
@@ -37,7 +39,7 @@ $bestIdx = 0;
 $bestDiff = null;
 
 $limit = $n - $K;
-for ($i = 0; $i <= $limit; $i++) {
+for ($i = 0; $i <= $limit; ++$i) {
     // sum of X[i+1 ... i+K-1] = prefix[i+K] - prefix[i+1]
     // 注意当 K=1 时，这个区间是空的，我们要小心一下
     if ($K == 1) {

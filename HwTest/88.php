@@ -1,17 +1,19 @@
 <?php
 
-$in = fopen("in.txt", "r");
+declare(strict_types=1);
+
+$in = fopen('in.txt', 'r');
 if ($in === false) {
     $in = STDIN;
 }
 
 $n = 0;
-fscanf($in, "%d", $n);
+fscanf($in, '%d', $n);
 
 $lamps = [];
-for ($i = 0; $i < $n; $i++) {
+for ($i = 0; $i < $n; ++$i) {
     $id = $x1 = $y1 = $x2 = $y2 = 0;
-    fscanf($in, "%d %d %d %d %d", $id, $x1, $y1, $x2, $y2);
+    fscanf($in, '%d %d %d %d %d', $id, $x1, $y1, $x2, $y2);
 
     $cy = ($y1 + $y2) / 2.0;
     $lamps[] = [
@@ -39,7 +41,7 @@ usort($lamps, function ($a, $b) {
 $used = array_fill(0, $n, false);
 $resultIds = [];
 
-for ($i = 0; $i < $n; $i++) {
+for ($i = 0; $i < $n; ++$i) {
     if ($used[$i]) {
         continue;
     }
@@ -49,7 +51,7 @@ for ($i = 0; $i < $n; $i++) {
 
     // 收集本行
     $rowIdxList = [];
-    for ($j = $i; $j < $n; $j++) {
+    for ($j = $i; $j < $n; ++$j) {
         if ($used[$j]) {
             continue;
         }

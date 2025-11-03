@@ -1,5 +1,7 @@
 <?php
-$in = @fopen("in.txt", "r");
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'r');
 if ($in === false) {
     $in = STDIN;
 }
@@ -32,17 +34,17 @@ function matchAt($hay, $needle, $start)
             if ($hay[$hi] !== $ch) {
                 return false;
             }
-            $hi++;
-            $pi++;
+            ++$hi;
+            ++$pi;
         } else {
             // ch == '[': 我们需要一直找到下一个 ']'
-            $pi++; // 跳过 '['
+            ++$pi; // 跳过 '['
             $setChars = [];
 
             // 收集候选字符，直到 ']'
             while ($pi < $pLen && $needle[$pi] !== ']') {
                 $setChars[] = $needle[$pi];
-                $pi++;
+                ++$pi;
             }
 
             // 如果没遇到']'就到头了，按输入保证这种不会发生（题目保证成对出现）
@@ -60,13 +62,13 @@ function matchAt($hay, $needle, $start)
                     break;
                 }
             }
-            if (!$ok) {
+            if (! $ok) {
                 return false;
             }
 
             // 成功匹配这一组，前进
-            $hi++;
-            $pi++; // 跳过 ']'
+            ++$hi;
+            ++$pi; // 跳过 ']'
         }
     }
 
@@ -77,7 +79,7 @@ function matchAt($hay, $needle, $start)
 // 3. 依次尝试每个起点
 $hLen = strlen($haystack);
 $answer = -1;
-for ($start = 0; $start < $hLen; $start++) {
+for ($start = 0; $start < $hLen; ++$start) {
     if (matchAt($haystack, $needle, $start)) {
         $answer = $start;
         break;

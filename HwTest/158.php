@@ -1,20 +1,22 @@
 <?php
-$in = @fopen("in.txt", "r");
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'r');
 if ($in === false) {
     $in = STDIN;
 }
 
 $line = trim(fgets($in));
-list($Tstr, $Nstr) = preg_split('/\s+/', $line);
-$T = (int)$Tstr;
-$N = (int)$Nstr;
+[$Tstr, $Nstr] = preg_split('/\s+/', $line);
+$T = (int) $Tstr;
+$N = (int) $Nstr;
 
 // 读取第2行: 路程段时间 (N+1 个整数)
 $line = trim(fgets($in));
 $parts = preg_split('/\s+/', $line);
 $travelDays = 0;
-for ($i = 0; $i < $N + 1; $i++) {
-    $travelDays += (int)$parts[$i];
+for ($i = 0; $i < $N + 1; ++$i) {
+    $travelDays += (int) $parts[$i];
 }
 
 // 还可以用来唱歌的天数上限
@@ -30,11 +32,11 @@ if ($C <= 0) {
 
 // 读取每个城市的 (M, D)
 $cities = [];
-for ($i = 0; $i < $N; $i++) {
+for ($i = 0; $i < $N; ++$i) {
     $line = trim(fgets($in));
-    list($Mstr, $Dstr) = preg_split('/\s+/', $line);
-    $M = (int)$Mstr;
-    $D = (int)$Dstr;
+    [$Mstr, $Dstr] = preg_split('/\s+/', $line);
+    $M = (int) $Mstr;
+    $D = (int) $Dstr;
     $cities[] = [$M, $D];
 }
 
@@ -55,13 +57,13 @@ foreach ($cities as $cd) {
         if ($cur < 0) {
             $cur = 0; // 收入不会低于0
         }
-        $days++;
+        ++$days;
     }
 
     $prefixProfit = [0];
     $sumVal = 0;
     $lenDaily = count($daily);
-    for ($k = 0; $k < $lenDaily; $k++) {
+    for ($k = 0; $k < $lenDaily; ++$k) {
         $sumVal += $daily[$k];
         $prefixProfit[] = $sumVal;
     }
@@ -92,16 +94,20 @@ foreach ($cityProfitList as $prefixProfit) {
         $maxStay = $C;
     }
 
-    for ($used = 0; $used <= $C; $used++) {
-        if ($dp[$used] < 0) continue; // 这个状态不可达，跳过
+    for ($used = 0; $used <= $C; ++$used) {
+        if ($dp[$used] < 0) {
+            continue;
+        } // 这个状态不可达，跳过
 
         $baseIncome = $dp[$used];
 
         // 尝试在当前城市唱 $add 天 (0..maxStay)，
         // 前提是 used + add <= C
-        for ($add = 0; $add <= $maxStay; $add++) {
+        for ($add = 0; $add <= $maxStay; ++$add) {
             $totalDays = $used + $add;
-            if ($totalDays > $C) break;
+            if ($totalDays > $C) {
+                break;
+            }
 
             $gain = $prefixProfit[$add]; // 唱add天的收入
             $candidate = $baseIncome + $gain;
@@ -116,7 +122,7 @@ foreach ($cityProfitList as $prefixProfit) {
 }
 
 $ans = 0;
-for ($d = 0; $d <= $C; $d++) {
+for ($d = 0; $d <= $C; ++$d) {
     if ($dp[$d] > $ans) {
         $ans = $dp[$d];
     }

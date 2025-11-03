@@ -1,19 +1,20 @@
 <?php
-// 1. 读取输入（优先 in.txt，否则 STDIN）
-$in = @fopen("in.txt", "r");
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'r');
 if ($in === false) {
     $in = STDIN;
 }
 
 // 读取起始下标 K
-$K = (int)trim(fgets($in));
+$K = (int) trim(fgets($in));
 
 // 读取单词数量 N
-$N = (int)trim(fgets($in));
+$N = (int) trim(fgets($in));
 
 // 读取 N 行单词
 $words = [];
-for ($i = 0; $i < $N; $i++) {
+for ($i = 0; $i < $N; ++$i) {
     $w = trim(fgets($in));
     $words[] = $w;
 }
@@ -38,7 +39,7 @@ while (true) {
     $bestWord = null;
 
     // 遍历所有未使用的单词，找候选
-    for ($i = 0; $i < $N; $i++) {
+    for ($i = 0; $i < $N; ++$i) {
         if ($used[$i]) {
             continue;
         }

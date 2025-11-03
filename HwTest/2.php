@@ -1,10 +1,12 @@
 <?php
-$in = @fopen("in.txt", 'rb');
+
+declare(strict_types=1);
+$in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
 $n = 0;
-fscanf($in, "%d", $n);
+fscanf($in, '%d', $n);
 $list = [];
 $total = $n * 2;
 $nextRemoveNo = 1;
@@ -14,17 +16,17 @@ while ($total--) {
     if ($line === 'remove') {
         if ($list[0] != $nextRemoveNo) {
             sort($list);
-            $ans++;
+            ++$ans;
         }
-        $nextRemoveNo++;
+        ++$nextRemoveNo;
         array_shift($list);
         continue;
     }
     [$direction, $add, $num] = explode(' ', $line);
-    if ($direction === "tail") {
-        $list[] = (int)$num;
+    if ($direction === 'tail') {
+        $list[] = (int) $num;
     } else {
-        array_unshift($list, (int)$num);
+        array_unshift($list, (int) $num);
     }
 }
 echo $ans;
