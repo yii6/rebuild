@@ -70,34 +70,11 @@ function serveOneUser(array &$stock, array $sizesAsc, array $sizesDesc, int $d):
 /** 判定是否可为 k 个用户各提供至少 d 带宽 */
 function canServeUsers(int $k, array $stock, array $sizesAsc, array $sizesDesc, int $d): bool
 {
-    // 可选剪枝：跟踪剩余总带宽/总块数
-    $remainBlocks = 0;
-    $remainBandwidth = 0;
-    foreach ($stock as $size => $qty) {
-        $remainBlocks += $qty;
-        $remainBandwidth += $size * $qty;
-    }
-
     for ($user = 0; $user < $k; ++$user) {
-        $needUsers = $k - $user;
-        if ($remainBlocks < $needUsers) {
+        if (!serveOneUser($stock, $sizesAsc, $sizesDesc, $d)
+        ) {
             return false;
         }
-        if ($remainBandwidth < $needUsers * $d) {
-            return false;
-        }
-        if (!serveOneUser($stock, $sizesAsc, $sizesDesc, $d)) {
-            return false;
-        }
-        // 重新计算“本次分配的消耗”
-        $afterBlocks = 0;
-        $afterBandwidth = 0;
-        foreach ($stock as $size => $qty) {
-            $afterBlocks += $qty;
-            $afterBandwidth += $size * $qty;
-        }
-        $remainBlocks = $afterBlocks;
-        $remainBandwidth = $afterBandwidth;
     }
     return true;
 }
