@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 function buildFreeNis(array $ni, int $n): array
 {
     $levels = [];
@@ -17,11 +18,11 @@ function buildFreeNis(array $ni, int $n): array
     return [$levels, $sizes];
 }
 
-/** 找到当前最大有货尺寸（从大到小） */
-function maxSize(array $stock, array $sizesDesc): int
+/** 从大到小找到：<= need 的最大尺寸（存在且有货时返回，否则 0） */
+function maxLE(array $stock, array $sizesDesc, int $need): int
 {
     foreach ($sizesDesc as $s) {
-        if (($stock[$s] ?? 0) > 0) {
+        if ($s <= $need && ($stock[$s] ?? 0) > 0) {
             return $s;
         }
     }
@@ -41,53 +42,69 @@ function minCover(array $stock, array $sizesAsc, int $need): int
 
 /**
  * 判定是否可为 k 个用户各提供至少 d 带宽
- *   1) 找最小覆盖 s >= need，用 1 块结束该用户
- *   2) 取当前最大尺寸 s_max 做整份匹配：t = min(floor(need/s_max), 库存),把 need 压一次，回到 1)
- *    重复直到 need<=0 或库存耗尽
+ * 新策略：
+ *   while need>0:
+ *     1) 先用 “<=need 的最大块” 尽量压缩 need（整份匹配：t=min(floor(need/s),库存)）
+ *     2) 若已经没有任何 <=need 的块，则找一块 “最小覆盖(>=need)” 直接结束该用户
+ *     3) 两者都没有则失败.
  */
 function canServeUsers(int $k, array $freeNis, array $sizesAsc, int $d): bool
 {
     $sizesDesc = array_reverse($sizesAsc);
     for ($user = 0; $user < $k; ++$user) {
-        $need = $d;
-        while ($need > 0) {
-            // 1) 最小覆盖（>= need）
-            $cover = minCover($freeNis, $sizesAsc, $need);
-            if ($cover > 0) {
-                --$freeNis[$cover];
-                break;
-            }
-            // 2) 用最大块压缩 need
-            $maxSize = maxSize($freeNis, $sizesDesc);
-            if ($maxSize === 0) {
-                return false;
-            }
-            $q = $freeNis[$maxSize];
-            $t = intdiv($need, $maxSize);
-            if ($t > $q) {
-                $t = $q;
-            }
-            $freeNis[$maxSize] -= $t;
-            $need -= $t * $maxSize;
+        if (! serveOneUser($freeNis, $sizesAsc, $sizesDesc, $d)) {
+            return false;
         }
     }
     return true;
 }
 
-// ------------------ 输入（文件流优先，失败回落 STDIN） ------------------
+/** 拆分后的：为“单个用户”分配 d 带宽；会消耗库存（$stock 按引用传入） */
+function serveOneUser(array &$stock, array $sizesAsc, array $sizesDesc, int $d): bool
+{
+    $need = $d;
+    while ($need > 0) {
+        // 1) 优先用 <=need 的最大块“凑近”
+        $s = maxLE($stock, $sizesDesc, $need);
+        if ($s > 0) {
+            $q = $stock[$s];
+            $t = intdiv($need, $s);         // 此时 s <= need，t >= 1
+            if ($t > $q) {
+                $t = $q;
+            }
+            $stock[$s] -= $t;
+            $need -= $t * $s;
+            if ($need <= 0) {
+                break;
+            }
+            continue;                        // 继续用更小块凑
+        }
+        // 2) 没有 <=need 的块了，用一块最小覆盖 >=need 收尾
+        $cover = minCover($stock, $sizesAsc, $need);
+        if ($cover > 0) {
+            --$stock[$cover];
+            break;
+        }
+        return false;
+    }
+    return true;
+}
+
+// ------------------ 输入（文件流优先，失败回落 STDIN；3行一组，无空行） ------------------
 $in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
-while ($n = fgets($in)) {
-    $n = (int) trim($n);
-    $line = trim(fgets($in));
-    $Ni = array_map('intval', preg_split('/\s+/', $line));
+
+while (($lineN = fgets($in)) !== false) {
+    $n = (int) trim($lineN);
+    $lineNi = trim(fgets($in));
+    $Ni = array_map('intval', preg_split('/\s+/', $lineNi));
     $D = (int) trim(fgets($in));
 
     [$freeNis, $sizesAsc] = buildFreeNis($Ni, $n);
 
-    // 统计“块总数”和“带宽总和”
+    // 块总数 & 带宽总和
     $totalBlocks = 0;
     $totalBandwidth = 0;
     foreach ($freeNis as $size => $qty) {
@@ -97,13 +114,11 @@ while ($n = fgets($in)) {
 
     if ($D <= 0) {
         echo $totalBlocks, "\n";
-        if ($in !== STDIN) {
-            fclose($in);
-        }
         continue;
     }
 
     $maxPossibleUsers = min($totalBlocks, intdiv($totalBandwidth, $D));
+
     // 二分最大可服务用户数（上中位收敛）
     $lo = 0;
     $hi = $maxPossibleUsers;
@@ -117,6 +132,7 @@ while ($n = fgets($in)) {
     }
     echo $lo, "\n";
 }
+
 if ($in !== STDIN) {
     fclose($in);
 }
