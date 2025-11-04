@@ -1,21 +1,22 @@
 <?php
 
 declare(strict_types=1);
-
-function buildFreeNis(array $ni, int $n): array
+function buildStock(array $ni, int $n): array
 {
-    $levels = [];
+    $stock = [];
     $sizes = [];
     for ($i = 0; $i <= $n; ++$i) {
         $cnt = $ni[$i] ?? 0;
         if ($cnt > 0) {
-            $size = 1 << $i;
-            $levels[$size] = $cnt;
+            // 使用 ** 避免位移在极端 32 位平台溢出
+            $size = 2 ** $i;
+            $stock[$size] = ($stock[$size] ?? 0) + $cnt;
             $sizes[] = $size;
         }
     }
-    sort($sizes); // 升序
-    return [$levels, $sizes];
+    sort($sizes);
+    $sizesDesc = array_reverse($sizes);
+    return [$stock, $sizes, $sizesDesc];
 }
 
 /** 从大到小找到：<= need 的最大尺寸（存在且有货时返回，否则 0） */
@@ -40,46 +41,22 @@ function minCover(array $stock, array $sizesAsc, int $need): int
     return 0;
 }
 
-/**
- * 判定是否可为 k 个用户各提供至少 d 带宽
- * 新策略：
- *   while need>0:
- *     1) 先用 “<=need 的最大块” 尽量压缩 need（整份匹配：t=min(floor(need/s),库存)）
- *     2) 若已经没有任何 <=need 的块，则找一块 “最小覆盖(>=need)” 直接结束该用户
- *     3) 两者都没有则失败.
- */
-function canServeUsers(int $k, array $freeNis, array $sizesAsc, int $d): bool
-{
-    $sizesDesc = array_reverse($sizesAsc);
-    for ($user = 0; $user < $k; ++$user) {
-        if (!serveOneUser($freeNis, $sizesAsc, $sizesDesc, $d)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-/** 拆分后的：为“单个用户”分配 d 带宽；会消耗库存（$stock 按引用传入） */
+/** 为单个用户分配 ≥d 带宽；按引用消耗库存 */
 function serveOneUser(array &$stock, array $sizesAsc, array $sizesDesc, int $d): bool
 {
     $need = $d;
     while ($need > 0) {
-        // 1) 优先用 <=need 的最大块“凑近”
         $s = maxLE($stock, $sizesDesc, $need);
         if ($s > 0) {
             $q = $stock[$s];
-            $t = intdiv($need, $s);         // 此时 s <= need，t >= 1
+            $t = intdiv($need, $s); // s<=need, t>=1
             if ($t > $q) {
                 $t = $q;
             }
             $stock[$s] -= $t;
             $need -= $t * $s;
-            if ($need <= 0) {
-                break;
-            }
-            continue;                        // 继续用更小块凑
+            continue;
         }
-        // 2) 没有 <=need 的块了，用一块最小覆盖 >=need 收尾
         $cover = minCover($stock, $sizesAsc, $need);
         if ($cover > 0) {
             --$stock[$cover];
@@ -90,7 +67,42 @@ function serveOneUser(array &$stock, array $sizesAsc, array $sizesDesc, int $d):
     return true;
 }
 
-// ------------------ 输入（文件流优先，失败回落 STDIN；3行一组，无空行） ------------------
+/** 判定是否可为 k 个用户各提供至少 d 带宽 */
+function canServeUsers(int $k, array $stock, array $sizesAsc, array $sizesDesc, int $d): bool
+{
+    // 可选剪枝：跟踪剩余总带宽/总块数
+    $remainBlocks = 0;
+    $remainBandwidth = 0;
+    foreach ($stock as $size => $qty) {
+        $remainBlocks += $qty;
+        $remainBandwidth += $size * $qty;
+    }
+
+    for ($user = 0; $user < $k; ++$user) {
+        $needUsers = $k - $user;
+        if ($remainBlocks < $needUsers) {
+            return false;
+        }
+        if ($remainBandwidth < $needUsers * $d) {
+            return false;
+        }
+        if (!serveOneUser($stock, $sizesAsc, $sizesDesc, $d)) {
+            return false;
+        }
+        // 重新计算“本次分配的消耗”
+        $afterBlocks = 0;
+        $afterBandwidth = 0;
+        foreach ($stock as $size => $qty) {
+            $afterBlocks += $qty;
+            $afterBandwidth += $size * $qty;
+        }
+        $remainBlocks = $afterBlocks;
+        $remainBandwidth = $afterBandwidth;
+    }
+    return true;
+}
+
+// ------------------ 输入（文件流优先；3 行一组） ------------------
 $in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
@@ -98,16 +110,25 @@ if ($in === false) {
 
 while (($lineN = fgets($in)) !== false) {
     $n = (int)trim($lineN);
-    $lineNi = trim(fgets($in));
-    $Ni = array_map('intval', preg_split('/\s+/', $lineNi));
-    $D = (int)trim(fgets($in));
 
-    [$freeNis, $sizesAsc] = buildFreeNis($Ni, $n);
+    $lineNi = fgets($in);
+    if ($lineNi === false) {
+        break;
+    }
+    $Ni = array_map('intval', preg_split('/\s+/', trim($lineNi)));
+
+    $lineD = fgets($in);
+    if ($lineD === false) {
+        break;
+    }
+    $D = (int)trim($lineD);
+
+    [$stock, $sizesAsc, $sizesDesc] = buildStock($Ni, $n);
 
     // 块总数 & 带宽总和
     $totalBlocks = 0;
     $totalBandwidth = 0;
-    foreach ($freeNis as $size => $qty) {
+    foreach ($stock as $size => $qty) {
         $totalBlocks += $qty;
         $totalBandwidth += $size * $qty;
     }
@@ -124,7 +145,7 @@ while (($lineN = fgets($in)) !== false) {
     $hi = $maxPossibleUsers;
     while ($lo < $hi) {
         $mid = intdiv($lo + $hi + 1, 2);
-        if (canServeUsers($mid, $freeNis, $sizesAsc, $D)) {
+        if (canServeUsers($mid, $stock, $sizesAsc, $sizesDesc, $D)) {
             $lo = $mid;
         } else {
             $hi = $mid - 1;
