@@ -61,7 +61,7 @@ $cur = [];
 for ($i = 0, $N = count($parts); $i < $N; ++$i) {
     $cur[] = [
         'id' => $i,
-        'power' => (int) $parts[$i],
+        'power' => (int)$parts[$i],
     ];
 }
 

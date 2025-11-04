@@ -7,9 +7,9 @@ if ($in === false) {
 }
 $line = trim(fgets($in));
 [$n, $T, $k, $str] = preg_split('/\s+/', $line);
-$n = (int) $n;
-$T = (int) $T;
-$k = (int) $k;
+$n = (int)$n;
+$T = (int)$T;
+$k = (int)$k;
 $ans = 0;
 $calories = explode(',', substr($str, 1, -1));
 
@@ -32,7 +32,7 @@ function totalCalories($excises, $calories)
 {
     $calorie = 0;
     foreach ($excises as $j) {
-        $calorie += (int) $calories[$j];
+        $calorie += (int)$calories[$j];
     }
     return $calorie;
 }

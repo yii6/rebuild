@@ -9,7 +9,7 @@ if ($in === false) {
 
 // 读第一串
 $line = '';
-while (! feof($in)) {
+while (!feof($in)) {
     $line = trim(fgets($in));
     if ($line !== '') {
         break;
@@ -19,7 +19,7 @@ $A = $line;
 
 // 读第二串
 $line = '';
-while (! feof($in)) {
+while (!feof($in)) {
     $line = trim(fgets($in));
     if ($line !== '') {
         break;
@@ -29,7 +29,7 @@ $B = $line;
 
 // 读后续相似行
 $similarLines = [];
-while (! feof($in)) {
+while (!feof($in)) {
     $l = trim(fgets($in));
     if ($l === '') {
         continue;
@@ -48,13 +48,13 @@ $parent = []; // string -> string (its parent rep)
 // make/find/union
 function uf_make($x, &$parent)
 {
-    if (! isset($parent[$x])) {
+    if (!isset($parent[$x])) {
         $parent[$x] = $x;
     }
 }
 function uf_find($x, &$parent)
 {
-    if (! isset($parent[$x])) {
+    if (!isset($parent[$x])) {
         return null; // not in UF at all
     }
     if ($parent[$x] !== $x) {
@@ -81,7 +81,7 @@ $noisePatterns = []; // e.g. ["(***)", ...]
 foreach ($similarLines as $line) {
     // 拆成词（按空白分开）
     $parts = preg_split('/\s+/', $line);
-    if (! $parts || count($parts) === 0) {
+    if (!$parts || count($parts) === 0) {
         continue;
     }
 
@@ -226,7 +226,7 @@ function buildPrefixTokens($S, $allTokens)
         $tmp = [];
         foreach ($prefixTokens[$i] as $item) {
             $key = $item['tok'] . '#' . $item['len'];
-            if (! isset($seen[$key])) {
+            if (!isset($seen[$key])) {
                 $seen[$key] = true;
                 $tmp[] = $item;
             }
@@ -336,7 +336,7 @@ function dfsSimilar($i, $j, $A, $B, $prefixA, $prefixB, $noiseRegs, &$parent, &$
     }
 
     // 尝试A消费一段噪音（B不动）
-    if ($i < $lenA && ! empty($noiseRegs)) {
+    if ($i < $lenA && !empty($noiseRegs)) {
         $optsA = noiseConsumeAt($A, $i, $noiseRegs);
         foreach ($optsA as $opt) {
             $ni = $opt['end'];
@@ -352,7 +352,7 @@ function dfsSimilar($i, $j, $A, $B, $prefixA, $prefixB, $noiseRegs, &$parent, &$
     }
 
     // 尝试B消费一段噪音（A不动）
-    if ($j < $lenB && ! empty($noiseRegs)) {
+    if ($j < $lenB && !empty($noiseRegs)) {
         $optsB = noiseConsumeAt($B, $j, $noiseRegs);
         foreach ($optsB as $opt) {
             $nj = $opt['end'];
@@ -432,7 +432,7 @@ function dfsCollect($i, $j, $A, $B, $prefixA, $prefixB, $noiseRegs, &$parent, &$
     }
 
     // 2. A 吃噪音 (B不动)
-    if ($i < $lenA && ! empty($noiseRegs)) {
+    if ($i < $lenA && !empty($noiseRegs)) {
         $optsA = noiseConsumeAt($A, $i, $noiseRegs);
         foreach ($optsA as $opt) {
             $ni = $opt['end'];
@@ -449,7 +449,7 @@ function dfsCollect($i, $j, $A, $B, $prefixA, $prefixB, $noiseRegs, &$parent, &$
     }
 
     // 3. B 吃噪音 (A不动)
-    if ($j < $lenB && ! empty($noiseRegs)) {
+    if ($j < $lenB && !empty($noiseRegs)) {
         $optsB = noiseConsumeAt($B, $j, $noiseRegs);
         foreach ($optsB as $opt) {
             $nj = $opt['end'];
@@ -485,7 +485,7 @@ if ($isSim) {
     $seen = [];
     $uniq = [];
     foreach ($diffList as $d) {
-        if (! isset($seen[$d])) {
+        if (!isset($seen[$d])) {
             $seen[$d] = true;
             $uniq[] = $d;
         }

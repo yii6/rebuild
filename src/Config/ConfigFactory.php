@@ -20,7 +20,7 @@ class ConfigFactory
     protected function readConfig(string $string): array
     {
         $config = require $string;
-        if (! is_array($config)) {
+        if (!is_array($config)) {
             return [];
         }
         return $config;

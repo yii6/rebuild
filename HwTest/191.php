@@ -7,10 +7,10 @@ if ($in === false) {
 }
 
 // 读取起始下标 K
-$K = (int) trim(fgets($in));
+$K = (int)trim(fgets($in));
 
 // 读取单词数量 N
-$N = (int) trim(fgets($in));
+$N = (int)trim(fgets($in));
 
 // 读取 N 行单词
 $words = [];

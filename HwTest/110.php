@@ -19,8 +19,8 @@ if ($in === false) {
 $firstLine = trim(fgets($in));
 [$mStr, $nStr] = explode(',', $firstLine);
 
-$M = (int) $mStr;
-$N = (int) $nStr;
+$M = (int)$mStr;
+$N = (int)$nStr;
 
 if ($M < 3 || $M > 10 || $N < 3 || $N > 100) {
     wrongInput($in);
@@ -45,7 +45,7 @@ for ($judge = 0; $judge < $M; ++$judge) {
     // 逐个分数检查并计入
     for ($i = 0; $i < $N; ++$i) {
         $scoreStr = trim($parts[$i]);
-        $score = (int) $scoreStr;
+        $score = (int)$scoreStr;
         if ($score < 1 || $score > 10) {
             wrongInput($in);
         }

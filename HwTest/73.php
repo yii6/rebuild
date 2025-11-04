@@ -12,8 +12,8 @@ $parts1 = explode(' ', $line1);
 $taskCountPairs = count($parts1);
 $tasks = [];
 for ($i = 0; $i < $taskCountPairs; $i += 2) {
-    $t = (int) $parts1[$i];
-    $dur = (int) $parts1[$i + 1];
+    $t = (int)$parts1[$i];
+    $dur = (int)$parts1[$i + 1];
     $tasks[] = [
         't' => $t,
         'dur' => $dur,
@@ -22,8 +22,8 @@ for ($i = 0; $i < $taskCountPairs; $i += 2) {
 
 // 解析第二行
 [$queueCapStr, $workerNumStr] = explode(' ', $line2);
-$queueCap = (int) $queueCapStr;   // 工作队列最大长度 Q
-$workerNum = (int) $workerNumStr; // 执行者数量 M
+$queueCap = (int)$queueCapStr;   // 工作队列最大长度 Q
+$workerNum = (int)$workerNumStr; // 执行者数量 M
 
 // 初始化
 $N = count($tasks);
@@ -65,7 +65,7 @@ function assignTasks(&$workers, &$queue, $time, &$lastFinishTime)
 
     // 让他们按顺序从队列头拿任务
     $idleIdx = 0;
-    while (! empty($queue) && $idleIdx < count($idle)) {
+    while (!empty($queue) && $idleIdx < count($idle)) {
         $w = $idle[$idleIdx];
         ++$idleIdx;
 

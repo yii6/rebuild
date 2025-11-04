@@ -44,7 +44,7 @@ class CoreMiddleware implements CoreMiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $dispatched = $request->getAttribute(Dispatched::class);
-        if (! $dispatched instanceof Dispatched) {
+        if (!$dispatched instanceof Dispatched) {
             throw new InvalidArgumentException('Route not found');
         }
         switch ($dispatched->status) {
@@ -58,7 +58,7 @@ class CoreMiddleware implements CoreMiddlewareInterface
                 $response = $this->handleFound($request, $dispatched);
                 break;
         }
-        if (! $response instanceof ResponseInterface) {
+        if (!$response instanceof ResponseInterface) {
             $response = $this->transferToResponse($response);
         }
         return $response;
@@ -79,10 +79,10 @@ class CoreMiddleware implements CoreMiddlewareInterface
     protected function handleFound(ServerRequestInterface $request, Dispatched $dispatched)
     {
         [$controller, $action] = $dispatched->handler;
-        if (! class_exists($controller)) {
+        if (!class_exists($controller)) {
             throw new InvalidArgumentException('Controller not exist');
         }
-        if (! method_exists($controller, $action)) {
+        if (!method_exists($controller, $action)) {
             throw new InvalidArgumentException('Action of Controller not exist');
         }
         $parameters = [];
@@ -95,7 +95,7 @@ class CoreMiddleware implements CoreMiddlewareInterface
         if (is_string($response)) {
             return $this->response()
                 ->withAddedHeader('Content-Type', 'text/plain')
-                ->withBody(new SwooleStream((string) $response));
+                ->withBody(new SwooleStream((string)$response));
         }
         if (is_array($response) || $response instanceof Arrayable) {
             return $this->response()
@@ -105,7 +105,7 @@ class CoreMiddleware implements CoreMiddlewareInterface
         if ($response instanceof Jsonable) {
             return $this->response()
                 ->withAddedHeader('Content-Type', 'application/json')
-                ->withBody(new SwooleStream((string) $response));
+                ->withBody(new SwooleStream((string)$response));
         }
         return $response;
     }

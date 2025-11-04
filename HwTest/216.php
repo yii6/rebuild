@@ -9,8 +9,8 @@ if ($in === false) {
 // 1. 读取 N 和 M
 $line = trim(fgets($in));
 [$Nstr, $Mstr] = preg_split('/\s+/', $line);
-$N = (int) $Nstr;
-$M = (int) $Mstr;
+$N = (int)$Nstr;
+$M = (int)$Mstr;
 
 // 2. 读取矩阵
 $grid = [];
@@ -19,7 +19,7 @@ for ($r = 0; $r < $N; ++$r) {
     $parts = preg_split('/\s+/', $rowLine);
     $row = [];
     for ($c = 0; $c < $M; ++$c) {
-        $row[$c] = (int) $parts[$c];
+        $row[$c] = (int)$parts[$c];
     }
     $grid[$r] = $row;
 }
@@ -43,7 +43,7 @@ $dirs = [
 $clicks = 0;
 for ($i = 0; $i < $N; ++$i) {
     for ($j = 0; $j < $M; ++$j) {
-        if ($grid[$i][$j] === 1 && ! $visited[$i][$j]) {
+        if ($grid[$i][$j] === 1 && !$visited[$i][$j]) {
             // 发现一个新连通块
             ++$clicks;
 
@@ -51,7 +51,7 @@ for ($i = 0; $i < $N; ++$i) {
             $stack = [[$i, $j]];
             $visited[$i][$j] = true;
 
-            while (! empty($stack)) {
+            while (!empty($stack)) {
                 [$cr, $cc] = array_pop($stack);
 
                 // 遍历8方向
@@ -62,7 +62,7 @@ for ($i = 0; $i < $N; ++$i) {
                     if ($nr < 0 || $nr >= $N || $nc < 0 || $nc >= $M) {
                         continue;
                     }
-                    if ($grid[$nr][$nc] === 1 && ! $visited[$nr][$nc]) {
+                    if ($grid[$nr][$nc] === 1 && !$visited[$nr][$nc]) {
                         $visited[$nr][$nc] = true;
                         $stack[] = [$nr, $nc];
                     }

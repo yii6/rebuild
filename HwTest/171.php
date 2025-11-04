@@ -14,10 +14,10 @@ preg_match_all('/\d+/', $line, $matches);
 $nums = $matches[0];
 
 $cnt = count($nums);
-$K = (int) $nums[$cnt - 1];
+$K = (int)$nums[$cnt - 1];
 $X = [];
 for ($i = 0; $i < $cnt - 1; ++$i) {
-    $X[] = (int) $nums[$i];
+    $X[] = (int)$nums[$i];
 }
 
 $n = count($X);

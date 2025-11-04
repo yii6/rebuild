@@ -62,7 +62,7 @@ function matchAt($hay, $needle, $start)
                     break;
                 }
             }
-            if (! $ok) {
+            if (!$ok) {
                 return false;
             }
 

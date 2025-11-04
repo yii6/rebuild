@@ -5,7 +5,7 @@ $in = @fopen('in.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
-$N = (int) trim(fgets($in));
+$N = (int)trim(fgets($in));
 $dp = array_fill(0, $N + 1, 0);
 // 初始化边界
 $dp[0] = 1;

@@ -15,7 +15,7 @@ for ($i = 0; $i < $n; ++$i) {
     $vals = explode(' ', $line);
     $row = [];
     for ($j = 0; $j < $n; ++$j) {
-        $v = (int) $vals[$j];
+        $v = (int)$vals[$j];
         $row[$j] = $v;
         if ($v === -3) {
             $momX = $i;

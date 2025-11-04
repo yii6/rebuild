@@ -7,7 +7,7 @@ use Rebuild\Config\ConfigFactory;
 use Symfony\Component\Console\Application;
 
 require_once 'vendor/autoload.php';
-! defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__));
+!defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__));
 
 $application = new Application();
 

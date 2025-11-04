@@ -21,7 +21,7 @@ class ServerFactory
 
     public function getServer(): Server
     {
-        if (! isset($this->server)) {
+        if (!isset($this->server)) {
             $this->server = new Server();
         }
         return $this->server;

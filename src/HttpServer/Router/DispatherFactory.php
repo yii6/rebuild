@@ -34,7 +34,7 @@ class DispatherFactory
 
     public function getDispathcer(string $serverName): Dispatcher
     {
-        if (! isset($this->dispatchers[$serverName])) {
+        if (!isset($this->dispatchers[$serverName])) {
             $this->dispatchers[$serverName] = simpleDispatcher(function (RouteCollector $r) {
                 foreach ($this->routes as $route) {
                     [$httpMethod, $path, $handler] = $route;

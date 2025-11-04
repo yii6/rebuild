@@ -29,7 +29,7 @@ for ($i = 0; $i < $n; ++$i) {
     $scores = [];
     $total = 0;
     for ($j = 0; $j < $m; ++$j) {
-        $score = (int) $parts[$j + 1];
+        $score = (int)$parts[$j + 1];
         $scores[$j] = $score;
         $total += $score;
     }

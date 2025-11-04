@@ -8,15 +8,15 @@ if ($in === false) {
 
 $line = trim(fgets($in));
 [$Tstr, $Nstr] = preg_split('/\s+/', $line);
-$T = (int) $Tstr;
-$N = (int) $Nstr;
+$T = (int)$Tstr;
+$N = (int)$Nstr;
 
 // 读取第2行: 路程段时间 (N+1 个整数)
 $line = trim(fgets($in));
 $parts = preg_split('/\s+/', $line);
 $travelDays = 0;
 for ($i = 0; $i < $N + 1; ++$i) {
-    $travelDays += (int) $parts[$i];
+    $travelDays += (int)$parts[$i];
 }
 
 // 还可以用来唱歌的天数上限
@@ -35,8 +35,8 @@ $cities = [];
 for ($i = 0; $i < $N; ++$i) {
     $line = trim(fgets($in));
     [$Mstr, $Dstr] = preg_split('/\s+/', $line);
-    $M = (int) $Mstr;
-    $D = (int) $Dstr;
+    $M = (int)$Mstr;
+    $D = (int)$Dstr;
     $cities[] = [$M, $D];
 }
 

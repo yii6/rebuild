@@ -52,7 +52,7 @@ function canServeUsers(int $k, array $freeNis, array $sizesAsc, int $d): bool
 {
     $sizesDesc = array_reverse($sizesAsc);
     for ($user = 0; $user < $k; ++$user) {
-        if (! serveOneUser($freeNis, $sizesAsc, $sizesDesc, $d)) {
+        if (!serveOneUser($freeNis, $sizesAsc, $sizesDesc, $d)) {
             return false;
         }
     }
@@ -97,10 +97,10 @@ if ($in === false) {
 }
 
 while (($lineN = fgets($in)) !== false) {
-    $n = (int) trim($lineN);
+    $n = (int)trim($lineN);
     $lineNi = trim(fgets($in));
     $Ni = array_map('intval', preg_split('/\s+/', $lineNi));
-    $D = (int) trim(fgets($in));
+    $D = (int)trim(fgets($in));
 
     [$freeNis, $sizesAsc] = buildFreeNis($Ni, $n);
 

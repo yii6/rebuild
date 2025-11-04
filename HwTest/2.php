@@ -24,9 +24,9 @@ while ($total--) {
     }
     [$direction, $add, $num] = explode(' ', $line);
     if ($direction === 'tail') {
-        $list[] = (int) $num;
+        $list[] = (int)$num;
     } else {
-        array_unshift($list, (int) $num);
+        array_unshift($list, (int)$num);
     }
 }
 echo $ans;
