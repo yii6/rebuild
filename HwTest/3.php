@@ -87,21 +87,17 @@ if ($in === false) {
 
 while (($lineN = fgets($in)) !== false) {
     $n = (int)trim($lineN);
-
     $lineNi = fgets($in);
     if ($lineNi === false) {
         break;
     }
     $Ni = array_map('intval', preg_split('/\s+/', trim($lineNi)));
-
     $lineD = fgets($in);
     if ($lineD === false) {
         break;
     }
     $D = (int)trim($lineD);
-
     [$stock, $sizesAsc, $sizesDesc] = buildStock($Ni, $n);
-
     // 块总数 & 带宽总和
     $totalBlocks = 0;
     $totalBandwidth = 0;
@@ -109,14 +105,11 @@ while (($lineN = fgets($in)) !== false) {
         $totalBlocks += $qty;
         $totalBandwidth += $size * $qty;
     }
-
     if ($D <= 0) {
         echo $totalBlocks, "\n";
         continue;
     }
-
     $maxPossibleUsers = min($totalBlocks, intdiv($totalBandwidth, $D));
-
     // 二分最大可服务用户数（上中位收敛）
     $lo = 0;
     $hi = $maxPossibleUsers;
