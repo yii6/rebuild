@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-$in = @fopen('in.txt', 'r');
+$in = @fopen('1.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
@@ -20,15 +20,15 @@ function isK($str, $k)
     $tmp = 0;
     $excises = [];
     for ($i = 0; $i < $n; ++$i) {
-        if ($str[$i] == '1') {
+        if ($str[$i] === '1') {
             ++$tmp;
             $excises[] = $i;
         }
     }
-    return $tmp == $k ? $excises : false;
+    return $tmp === $k ? $excises : false;
 }
 
-function totalCalories($excises, $calories)
+function totalCalories($excises, $calories): int
 {
     $calorie = 0;
     foreach ($excises as $j) {
@@ -41,7 +41,7 @@ for ($i = 0; $i < 1 << $n; ++$i) {
     $str = str_pad(decbin($i), $n, '0', STR_PAD_LEFT);
     if ($excises = isK($str, $k)) {
         $calorie = totalCalories($excises, $calories);
-        if ($calorie == $T) {
+        if ($calorie === $T) {
             ++$ans;
         }
     }
