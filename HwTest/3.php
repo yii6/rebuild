@@ -80,7 +80,7 @@ function canServeUsers(int $k, array $stock, array $sizesAsc, array $sizesDesc, 
 }
 
 // ------------------ 输入（文件流优先；3 行一组） ------------------
-$in = @fopen('in.txt', 'rb');
+$in = @fopen('3.txt', 'rb');
 if ($in === false) {
     $in = STDIN;
 }
