@@ -14,9 +14,9 @@ $k = (int)$k;
 $calories = explode(',', substr($str, 1, -1));
 $calories = array_map('intval', $calories);
 
-function subsetSumsByCountDP(array $arr): array
+function subsetSumsByCountDP(array $arr, int $k): array
 {
-    $m = count($arr);
+    $m = min(count($arr), $k);
     // 初始化：选 0 个时，和为 0 的方案有 1 种
     $buckets = array_fill(0, $m + 1, []);
     $buckets[0][0] = 1;
@@ -29,7 +29,9 @@ function subsetSumsByCountDP(array $arr): array
                 $buckets[$cnt + 1][$ns] = ($buckets[$cnt + 1][$ns] ?? 0) + $freq;
             }
         }
-        ++$maxCnt;
+        if ($maxCnt < $m - 1) {
+            ++$maxCnt;
+        }
     }
     return $buckets;
 }
@@ -40,8 +42,8 @@ $left = array_slice($calories, 0, $mid);
 $right = array_slice($calories, $mid);
 
 // 两边都预处理为：选中个数 => (sum => 方案数)
-$leftBuckets = subsetSumsByCountDP($left);
-$rightBuckets = subsetSumsByCountDP($right);
+$leftBuckets = subsetSumsByCountDP($left, $k);
+$rightBuckets = subsetSumsByCountDP($right, $k);
 
 // 统计答案
 $ans = 0;
