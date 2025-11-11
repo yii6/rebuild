@@ -53,19 +53,14 @@ $maxR = count($right);
 // 枚举左边选中个数 cntL，右边需要选 needCnt = k - cntL
 for ($cntL = 0; $cntL <= min($k, $maxL); ++$cntL) {
     $needCnt = $k - $cntL;
-    if ($needCnt > $maxR) {
+    if ($needCnt > $maxR || empty($rightBuckets[$needCnt])) {
         continue;
     }
-    if (empty($leftBuckets[$cntL]) || empty($rightBuckets[$needCnt])) {
-        continue;
-    }
-    $leftMap = $leftBuckets[$cntL];
-    $rightMap = $rightBuckets[$needCnt];
     // 遍历左边的每个 sumL，查右边 (T - sumL)
-    foreach ($leftMap as $sumL => $freqL) {
+    foreach ($leftBuckets[$cntL] as $sumL => $freqL) {
         $needSum = $T - $sumL;
-        if (isset($rightMap[$needSum])) {
-            $ans += $freqL * $rightMap[$needSum];
+        if (isset($rightBuckets[$needCnt][$needSum])) {
+            $ans += $freqL * $rightBuckets[$needCnt][$needSum];
         }
     }
 }
